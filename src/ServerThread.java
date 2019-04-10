@@ -13,7 +13,7 @@ public class ServerThread implements Runnable {
 
     public ServerThread()
     {
-        try{
+        try {
             String ip;
             String key = "";
             serverSocket = new ServerSocket(9000);
@@ -28,40 +28,39 @@ public class ServerThread implements Runnable {
                     while (addresses.hasMoreElements()) {
                         InetAddress addr = addresses.nextElement();
                         ip = addr.getHostAddress();
-                        if (ip.startsWith("192.168."))
-                            if (!ip.startsWith("192.168.1.")) {
-                                key = ip.substring(8);
-                                key = key.replace('.', '-');
-                                System.out.println("Your key is: " + key);
-                            }
+                        if (ip.startsWith("192.168.1")) {
+                            key = ip.substring(8);
+                            key = key.replace('.', '-');
+                            System.out.println("Your key is: " + key);
+                        }
                     }
+                    if (key.isEmpty())
+                        System.out.println("Empty key - Error occurred while generating your personal key.");
                 }
-                if(key.isEmpty())
-                    System.out.println("Empty key - Error occurred while generating your personal key.");
             }
-            catch (SocketException e) {
-                System.out.println("Address error - Error occurred while generating your personal key.");
+            catch(SocketException e){
+                    System.out.println("Address error - Error occurred while generating your personal key.");
+                    throw new RuntimeException(e);
+                }
+
+                socket = serverSocket.accept();
+                System.out.println("Client connected");
+            } catch (Exception e) {
+                System.out.println("Socket error - client can not connect to your server.");
                 throw new RuntimeException(e);
             }
-
-            socket = serverSocket.accept();
-            System.out.println("Client connected");
         }
-        catch (Exception e) {
-            System.out.println("Socket error - client can not connect to your server.");
-            throw new RuntimeException(e);
-        }
-    }
 
     public void run() {
         while (true){
             try
             {
-                DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
                 BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-                //in client
                 String message = inputStream.readLine();
+
+                //Debug
+                System.out.println(message);
+
                 operator = message.charAt(0);
                 switch (operator)
                 {
@@ -81,7 +80,6 @@ public class ServerThread implements Runnable {
                         break;
                 }
 
-                socket.close();
             }
             catch (Exception e)
             {

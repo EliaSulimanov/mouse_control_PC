@@ -2,8 +2,8 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
+import java.util.Enumeration;
 
 public class ServerThread implements Runnable {
 
@@ -14,12 +14,42 @@ public class ServerThread implements Runnable {
     public ServerThread()
     {
         try{
+            String ip;
+            String key = "";
             serverSocket = new ServerSocket(9000);
-            System.out.println("Opened socket at 9000");
+            try {
+                Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+                while (interfaces.hasMoreElements()) {
+                    NetworkInterface iface = interfaces.nextElement();
+                    if (iface.isLoopback() || !iface.isUp())
+                        continue;
+
+                    Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                    while (addresses.hasMoreElements()) {
+                        InetAddress addr = addresses.nextElement();
+                        ip = addr.getHostAddress();
+                        if (ip.startsWith("192.168."))
+                            if (!ip.startsWith("192.168.1.")) {
+                                key = ip.substring(8);
+                                key = key.replace('.', '-');
+                                System.out.println("Your key is: " + key);
+                            }
+                    }
+                }
+                if(key.isEmpty())
+                    System.out.println("Empty key - Error occurred while generating your personal key.");
+            }
+            catch (SocketException e) {
+                System.out.println("Address error - Error occurred while generating your personal key.");
+                throw new RuntimeException(e);
+            }
+
             socket = serverSocket.accept();
             System.out.println("Client connected");
         }
-        catch (Exception e){
+        catch (Exception e) {
+            System.out.println("Socket error - client can not connect to your server.");
+            throw new RuntimeException(e);
         }
     }
 
@@ -53,7 +83,10 @@ public class ServerThread implements Runnable {
 
                 socket.close();
             }
-            catch (Exception e){
+            catch (Exception e)
+            {
+                System.out.println("Communication Error - Error occurred while getting commands from the smartphone app.");
+                throw new RuntimeException(e);
             }
         }
     }

@@ -36,7 +36,7 @@ This program is very eassy to launch.
  4. Insert your connection key in the [smartphone app](#smartphone-app) and you are good to go!
 
 ## Smartphone APP
-[Soon](#)
+[Mouse Control-Android APP](https://github.com/EliaSulimanov/Mouse-Control-Android)
 
 ## License
 MIT License

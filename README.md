@@ -26,7 +26,7 @@ The server side app is running on the pc you want to control his mouse.
 ## Quick start
 
 ### Using
-This program is very eassy to launch.  
+This program is very easy to launch.  
 
  1. Make sure you have JVM installed, this is java program and will run on any machine as long as JVM installed.
  2. Open Terminal/CMD and navigate to the folder where Main.class is located.

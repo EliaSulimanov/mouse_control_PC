@@ -55,7 +55,6 @@ public class Main extends Thread {
      */
     static void leftClick(boolean isDoubleClick) {
         try {
-
             Robot robot = new Robot();
             if (isDoubleClick) {
                 robot.mousePress(InputEvent.BUTTON1_MASK);
@@ -132,7 +131,7 @@ public class Main extends Thread {
             String message;
             try {
                 serverSocket = new ServerSocket(3333);
-                serverSocket.setSoTimeout(1);
+                //serverSocket.setSoTimeout(1);
 
                 while(true) {
                     try {
